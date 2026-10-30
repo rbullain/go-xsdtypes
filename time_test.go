@@ -75,3 +75,14 @@ func TestTime_UnmarshalXML(t *testing.T) {
 		})
 	}
 }
+
+func Test_DecodeError(t *testing.T) {
+	t.Parallel()
+
+	var tm xsdtypes.Time
+
+	err := xml.Unmarshal([]byte("<dt>2024-01-01</tm>"), &tm)
+	if err == nil {
+		t.Fatal("expected an error, got nil")
+	}
+}
