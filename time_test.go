@@ -63,10 +63,12 @@ func TestTime_UnmarshalXML(t *testing.T) {
 			xmlInput := fmt.Sprintf("<tm>%s</tm>", tt.value)
 
 			var tm xsdtypes.Time
+
 			err := xml.Unmarshal([]byte(xmlInput), &tm)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("UnmarshalXML() error = %v, wantErr %v", err, tt.wantErr)
 			}
+
 			if !tt.wantErr && !time.Time.Equal(time.Time(tm), tt.want) {
 				t.Errorf("UnmarshalXML() got = %v, want %v", tm, tt.want)
 			}

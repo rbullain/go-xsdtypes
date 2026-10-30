@@ -1,0 +1,173 @@
+version: "2"
+
+linters:
+
+  enable:
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - canonicalheader
+    - containedctx
+    - contextcheck
+    - copyloopvar
+    - cyclop
+    - decorder
+    - depguard
+    - dogsled
+    - dupl
+    - dupword
+    - durationcheck
+    - embeddedstructfieldcheck
+    - errcheck
+    - errchkjson
+    - errname
+    - errorlint
+    - exhaustive
+    - exptostd
+    - fatcontext
+    - forbidigo
+    - forcetypeassert
+    - funcorder
+    - funlen
+    - ginkgolinter
+    - gocheckcompilerdirectives
+    - gochecknoglobals
+    - gochecknoinits
+    - gochecksumtype
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godoclint
+    - godot
+    - godox
+    - goheader
+    - gomoddirectives
+    - gomodguard_v2
+    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    - govet
+    - grouper
+    - iface
+    - importas
+    - inamedparam
+    - ineffassign
+    - interfacebloat
+    - intrange
+    - iotamixing
+    - ireturn
+    - lll
+    - loggercheck
+    - maintidx
+    - makezero
+    - mirror
+    - misspell
+    - mnd
+    - modernize
+    - musttag
+    - nakedret
+    - nestif
+    - nilerr
+    - nilnesserr
+    - nilnil
+    - noctx
+    - nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - paralleltest
+    - perfsprint
+    - prealloc
+    - predeclared
+    - promlinter
+    - protogetter
+    - reassign
+    - recvcheck
+    - revive
+    - rowserrcheck
+    - sloglint
+    - spancheck
+    - sqlclosecheck
+    - staticcheck
+    - tagalign
+    - tagliatelle
+    - testableexamples
+    - testifylint
+    - testpackage
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unqueryvet
+    - unused
+    - usestdlibvars
+    - usetesting
+    - varnamelen
+    - wastedassign
+    - whitespace
+    - wsl_v5
+
+    #- err113
+    #- exhaustruct_v5
+    #- nlreturn
+    #- wrapcheck
+
+  settings:
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment # too strict
+      settings:
+        shadow:
+          strict: true
+
+    revive:
+      rules:
+        - name: package-comments
+          disabled: true
+
+    depguard:
+      rules:
+        "deprecated":
+          files:
+            - "$all"
+          deny:
+            - pkg: "github.com/golang/protobuf"
+              desc: Use google.golang.org/protobuf instead, see https://developers.google.com/protocol-buffers/docs/reference/go/faq#modules
+            - pkg: "github.com/satori/go.uuid"
+              desc: Use github.com/google/uuid instead, satori's package is not maintained
+            - pkg: "github.com/gofrs/uuid$"
+              desc: Use github.com/gofrs/uuid/v5 or later, it was not a go module before v5
+            - pkg: "math/rand$"
+              desc: Use math/rand/v2
+
+  exclusions:
+    rules:
+      - path: '_test\.go'
+        linters:
+          - dupl
+          - errcheck
+          - exhaustruct_v5
+          - funlen
+          - goconst
+          - varnamelen
+
+formatters:
+  enable:
+    - gci
+    - golines
+
+    #- gofmt
+    #- gofumpt
+    #- goimports
+
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(github.com/rbullain/go-xsdtypes)
+
+    golines:
+      max-len: 120

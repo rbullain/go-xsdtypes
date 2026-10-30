@@ -2,7 +2,6 @@ package xsdtypes
 
 import (
 	"encoding/xml"
-	"errors"
 	"time"
 )
 
@@ -17,32 +16,24 @@ var (
 // dateMarshalLayout defines the layout for marshaling Date to XML.
 const dateMarshalLayout = "2006-01-02"
 
-var dateUnmarshalLayouts = []string{
-	"2006-01-02",
-	"2006-01-02Z07:00",
-}
-
 func (d Date) MarshalXML(encoder *xml.Encoder, start xml.StartElement) error {
 	formattedDate := time.Time(d).Format(dateMarshalLayout)
 	return encoder.EncodeElement(formattedDate, start)
 }
 
 func (d *Date) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error {
-	var val string
-	if err := decoder.DecodeElement(&val, &start); err != nil {
+	// contains the possible layouts used for unmarshaling Date from XML.
+	dateUnmarshalLayouts := [...]string{
+		"2006-01-02",
+		"2006-01-02Z07:00",
+	}
+
+	parsedTime, err := decodeXMLTime(decoder, start, dateUnmarshalLayouts[:])
+	if err != nil {
 		return err
 	}
 
-	var parsedDate time.Time
-	var err error
+	*d = Date(parsedTime)
 
-	for _, layout := range dateUnmarshalLayouts {
-		parsedDate, err = time.Parse(layout, val)
-		if err == nil {
-			*d = Date(parsedDate)
-			return nil
-		}
-	}
-
-	return errors.New("invalid date format: " + val)
+	return nil
 }
