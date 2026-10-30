@@ -56,6 +56,11 @@ func TestDateTime_UnmarshalXML(t *testing.T) {
 			value:   "2024-01-01 02:20:00",
 			wantErr: true,
 		},
+		{
+			name:    "ko 0000 year",
+			value:   "0000-04-24T02:20:00",
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

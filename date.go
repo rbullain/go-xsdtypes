@@ -2,6 +2,7 @@ package xsdtypes
 
 import (
 	"encoding/xml"
+	"errors"
 	"time"
 )
 
@@ -31,6 +32,10 @@ func (d *Date) UnmarshalXML(decoder *xml.Decoder, start xml.StartElement) error 
 	parsedTime, err := decodeXMLTime(decoder, start, dateUnmarshalLayouts[:])
 	if err != nil {
 		return err
+	}
+
+	if parsedTime.Year() == 0 {
+		return errors.New("invalid year")
 	}
 
 	*d = Date(parsedTime)

@@ -114,19 +114,6 @@ linters:
     #- wrapcheck
 
   settings:
-    govet:
-      enable-all: true
-      disable:
-        - fieldalignment # too strict
-      settings:
-        shadow:
-          strict: true
-
-    revive:
-      rules:
-        - name: package-comments
-          disabled: true
-
     depguard:
       rules:
         "deprecated":
@@ -141,6 +128,31 @@ linters:
               desc: Use github.com/gofrs/uuid/v5 or later, it was not a go module before v5
             - pkg: "math/rand$"
               desc: Use math/rand/v2
+
+    errcheck:
+      check-type-assertions: true
+
+    funlen:
+      lines: 100
+      statements: 50
+
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment # too strict
+      settings:
+        shadow:
+          strict: true
+
+    revive:
+      rules:
+        - name: package-comments
+          disabled: true
+
+    tagliatelle:
+      case:
+        rules:
+          json: snake
 
   exclusions:
     rules:

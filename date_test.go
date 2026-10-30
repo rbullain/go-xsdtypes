@@ -30,11 +30,6 @@ func TestDate_UnmarshalXML(t *testing.T) {
 			value: "1970-04-24Z",
 			want:  time.Date(1970, 4, 24, 0, 0, 0, 0, time.UTC),
 		},
-		// {
-		// 	name:  "ok negative year",
-		// 	value: "-1970-04-24",
-		// 	want:  time.Date(-1970, 4, 24, 0, 0, 0, 0, time.UTC),
-		// },
 		{
 			name:  "ok with offset",
 			value: "1970-04-24+02:00",
@@ -50,6 +45,16 @@ func TestDate_UnmarshalXML(t *testing.T) {
 			value:   "12:34:56",
 			wantErr: true,
 		},
+		{
+			name:    "ko 0000 year",
+			value:   "0000-04-24",
+			wantErr: true,
+		},
+		// {
+		// 	name:  "ok negative year",
+		// 	value: "-0001-04-24",
+		// 	want:  time.Date(0, 4, 24, 0, 0, 0, 0, time.UTC),
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
