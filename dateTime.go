@@ -9,8 +9,13 @@ import (
 // DateTime as defined in https://www.w3.org/TR/xmlschema-2/#dateTime
 type DateTime time.Time
 
+var (
+	_ xml.Marshaler   = (*DateTime)(nil)
+	_ xml.Unmarshaler = (*DateTime)(nil)
+)
+
 // dateTimeMarshalLayout defines the layout for marshaling DateTime to XML.
-const dateTimeMarshalLayout = "15:04:05"
+const dateTimeMarshalLayout = "2006-01-02T15:04:05Z07:00"
 
 func (dt DateTime) MarshalXML(encoder *xml.Encoder, start xml.StartElement) error {
 	formattedTime := time.Time(dt).Format(dateTimeMarshalLayout)

@@ -75,3 +75,38 @@ func TestDate_UnmarshalXML(t *testing.T) {
 		})
 	}
 }
+
+func TestDate_MarshalXML(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		value time.Time
+		want  string
+	}{
+		{
+			name:  "ok simple",
+			value: time.Date(1970, 4, 24, 0, 0, 0, 0, time.UTC),
+			want:  "<Date>1970-04-24</Date>",
+		},
+		{
+			name:  "ok leap day",
+			value: time.Date(2024, 2, 29, 0, 0, 0, 0, time.UTC),
+			want:  "<Date>2024-02-29</Date>",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := xml.Marshal(xsdtypes.Date(tt.value))
+			if err != nil {
+				t.Fatalf("MarshalXML() error = %v", err)
+			}
+
+			if string(got) != tt.want {
+				t.Errorf("MarshalXML() got = %s, want %s", got, tt.want)
+			}
+		})
+	}
+}

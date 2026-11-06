@@ -86,3 +86,38 @@ func Test_DecodeError(t *testing.T) {
 		t.Fatal("expected an error, got nil")
 	}
 }
+
+func TestTime_MarshalXML(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		value time.Time
+		want  string
+	}{
+		{
+			name:  "ok simple",
+			value: time.Date(0, 1, 1, 12, 34, 56, 0, time.UTC),
+			want:  "<Time>12:34:56</Time>",
+		},
+		{
+			name:  "ok midnight",
+			value: time.Date(0, 1, 1, 0, 0, 0, 0, time.UTC),
+			want:  "<Time>00:00:00</Time>",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := xml.Marshal(xsdtypes.Time(tt.value))
+			if err != nil {
+				t.Fatalf("MarshalXML() error = %v", err)
+			}
+
+			if string(got) != tt.want {
+				t.Errorf("MarshalXML() got = %s, want %s", got, tt.want)
+			}
+		})
+	}
+}

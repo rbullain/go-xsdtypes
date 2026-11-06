@@ -81,3 +81,57 @@ func TestDateTime_UnmarshalXML(t *testing.T) {
 		})
 	}
 }
+
+func TestDateTime_MarshalXML(t *testing.T) {
+	t.Parallel()
+
+	tzCest := time.FixedZone("CEST", 2*60*60)
+	tzCst := time.FixedZone("CST", -5*60*60)
+
+	tests := []struct {
+		name  string
+		value time.Time
+		want  string
+	}{
+		{
+			name:  "ok utc",
+			value: time.Date(2024, 1, 1, 2, 20, 0, 0, time.UTC),
+			want:  "<DateTime>2024-01-01T02:20:00Z</DateTime>",
+		},
+		{
+			name:  "ok with offset",
+			value: time.Date(2024, 1, 1, 2, 20, 0, 0, tzCest),
+			want:  "<DateTime>2024-01-01T02:20:00+02:00</DateTime>",
+		},
+		{
+			name:  "ok with offset negative",
+			value: time.Date(2024, 1, 1, 2, 20, 0, 0, tzCst),
+			want:  "<DateTime>2024-01-01T02:20:00-05:00</DateTime>",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := xml.Marshal(xsdtypes.DateTime(tt.value))
+			if err != nil {
+				t.Fatalf("MarshalXML() error = %v", err)
+			}
+
+			if string(got) != tt.want {
+				t.Errorf("MarshalXML() got = %s, want %s", got, tt.want)
+			}
+
+			var roundTripped xsdtypes.DateTime
+
+			err = xml.Unmarshal(got, &roundTripped)
+			if err != nil {
+				t.Fatalf("UnmarshalXML() error = %v", err)
+			}
+
+			if !time.Time.Equal(time.Time(roundTripped), tt.value) {
+				t.Errorf("round trip got = %v, want %v", time.Time(roundTripped), tt.value)
+			}
+		})
+	}
+}

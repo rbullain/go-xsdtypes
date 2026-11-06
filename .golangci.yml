@@ -103,7 +103,6 @@ linters:
     - unused
     - usestdlibvars
     - usetesting
-    - varnamelen
     - wastedassign
     - whitespace
     - wsl_v5
@@ -111,9 +110,14 @@ linters:
     #- err113
     #- exhaustruct_v5
     #- nlreturn
+    #- varnamelen
     #- wrapcheck
 
   settings:
+    cyclop:
+      max-complexity: 30
+      package-average: 10.0
+
     depguard:
       rules:
         "deprecated":
